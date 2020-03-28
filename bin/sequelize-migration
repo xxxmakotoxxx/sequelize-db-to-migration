@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+var sequelizeMigration = require('..');
+var path = require('path');
+var Sequelize = require('sequelize');
+var _ = Sequelize.Utils._;
+
+var argv = require('yargs')
+  .usage('Usage: sequelize-migration -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -c [/path/to/config] -o [/path/to/models] -t [tableName]')
+  .demand(['h', 'd'])
+  .alias('h', 'host')
+  .alias('d', 'database')
+  .alias('u', 'user')
+  .alias('x', 'pass')
+  .alias('p', 'port')
+  .alias('c', 'config')
+  .alias('o', 'output')
+  .alias('t', 'tables')
+  .alias('T', 'skip-tables')
+  .describe('h', 'IP/Hostname for the database.')
+  .describe('d', 'Database name.')
+  .describe('u', 'Username for database.')
+  .describe('x', 'Password for database.')
+  .describe('p', 'Port number for database.')
+  .describe('c', 'JSON file for Sequelize\'s constructor "options" flag object as defined here: https://sequelize.readthedocs.org/en/latest/api/sequelize/')
+  .describe('o', 'What directory to place the models.')
+  .describe('t', 'Comma-separated names of tables to import')
+  .describe('T', 'Comma-separated names of tables to skip')
+  .argv;
+
+var configFile = {
+  dialect: "mysql",
+  port: 3306,
+  host: 'localhost'
+}
+if (argv.c) {
+  configFile = require(path.resolve(argv.c));
+}
+var dir = argv.o || path.resolve(process.cwd() + '/migrations');
+configFile.directory = configFile.directory || dir;
+configFile.dialect = configFile.dialect || 'mysql';
+configFile.port = argv.p || configFile.port;
+configFile.host = argv.h || configFile.host || 'localhost';
+configFile.tables = configFile.tables || (argv.t && argv.t.split(',')) || null;
+configFile.skipTables = configFile.skipTables || (argv.T && argv.T.split(',')) || null;
+
+var migration = new sequelizeMigration(argv.d, argv.u, (!! argv.x ? ('' + argv.x) : null), configFile);
+
+migration.run(function (err) {
+  if (err) throw err;
+  console.log('Done!');
+});
