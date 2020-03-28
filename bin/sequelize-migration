@@ -2,7 +2,6 @@
 var sequelizeMigration = require('..');
 var path = require('path');
 var Sequelize = require('sequelize');
-var _ = Sequelize.Utils._;
 
 var argv = require('yargs')
   .usage('Usage: sequelize-migration -h <host> -d <database> -u <user> -x [password] -p [port]  --dialect [dialect] -c [/path/to/config] -o [/path/to/models] -t [tableName]')
