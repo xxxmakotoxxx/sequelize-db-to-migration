@@ -20,7 +20,7 @@ npm install -g mysql2
 ## Usage
 
 ```
-[node] sequelize-db-to-migration -h <host> -d <database> -u <user> -x [password] -p [port] -c [/path/to/config] -o [/path/to/migrations] -t [tableName]
+[node] sequelize-db-to-migration -h <host> -d <database> -u <user> -x <password> -p <port> -c </path/to/config> -o </path/to/migrations> -t <tableName>
 
 Options:
   -h, --host        IP/Hostname for the database.   [required]
